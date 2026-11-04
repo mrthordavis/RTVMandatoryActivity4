@@ -1,10 +1,16 @@
 syntax = "proto3";
 option go_package = "RTVMandatoryActivity4/gRPC/proto";
 
-message reply {
-  
+message ReplyMsg {
+    string id = 1;
+    int32 lamport = 2;
 }
 
-message request {
+message RequestMsg {
+    string id = 1;
+    int32 lamport = 2;
+}
 
+service RicartAgrawala {
+    rpc Request(RequestMsg) returns (ReplyMsg);
 }
