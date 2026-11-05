@@ -1,0 +1,43 @@
+[SERVER c] 2026/11/05 11:16:44 [STARTUP] Server has started at logical time: 0
+[SERVER c] 2026/11/05 11:16:53 [TICK] Lamport ticked to: 1
+[SERVER c] 2026/11/05 11:16:53 [MERGE] Merging between local timestamp: 1 and message timestamp: 3, and ticking by one.
+[SERVER c] 2026/11/05 11:16:53 [TICK] Lamport merged and ticked to: 4
+[SERVER c] 2026/11/05 11:16:53 [MERGE] Merging between local timestamp: 4 and message timestamp: 3, and ticking by one.
+[SERVER c] 2026/11/05 11:16:53 [TICK] Lamport merged and ticked to: 5
+[SERVER c] 2026/11/05 11:16:53 [MERGE] Merging between local timestamp: 5 and message timestamp: 3, and ticking by one.
+[SERVER c] 2026/11/05 11:16:53 [TICK] Lamport merged and ticked to: 6
+[SERVER c] 2026/11/05 11:16:53 c is entering the critical section at time: 6
+[SERVER c] 2026/11/05 11:16:53 c is doing work in the critical section and is 'working' for 10 seconds
+[SERVER c] 2026/11/05 11:16:56 [MERGE] Merging between local timestamp: 6 and message timestamp: 4, and ticking by one.
+[SERVER c] 2026/11/05 11:16:56 [TICK] Lamport merged and ticked to: 7
+[SERVER c] 2026/11/05 11:17:01 [MERGE] Merging between local timestamp: 7 and message timestamp: 7, and ticking by one.
+[SERVER c] 2026/11/05 11:17:01 [TICK] Lamport merged and ticked to: 8
+[SERVER c] 2026/11/05 11:17:03 [MERGE] Merging between local timestamp: 8 and message timestamp: 10, and ticking by one.
+[SERVER c] 2026/11/05 11:17:03 [TICK] Lamport merged and ticked to: 11
+[SERVER c] 2026/11/05 11:17:03 c is releasing the critical section at time: 6
+[SERVER c] 2026/11/05 11:17:03 [TICK] Lamport ticked to: 12
+[SERVER c] 2026/11/05 11:17:03 [TICK] Lamport ticked to: 13
+[SERVER c] 2026/11/05 11:17:03 [TICK] Lamport ticked to: 14
+[SERVER c] 2026/11/05 11:17:09 [TICK] Lamport ticked to: 15
+[SERVER c] 2026/11/05 11:17:13 [MERGE] Merging between local timestamp: 15 and message timestamp: 18, and ticking by one.
+[SERVER c] 2026/11/05 11:17:13 [TICK] Lamport merged and ticked to: 19
+[SERVER c] 2026/11/05 11:17:23 [MERGE] Merging between local timestamp: 19 and message timestamp: 20, and ticking by one.
+[SERVER c] 2026/11/05 11:17:23 [TICK] Lamport merged and ticked to: 21
+[SERVER c] 2026/11/05 11:17:33 [MERGE] Merging between local timestamp: 21 and message timestamp: 22, and ticking by one.
+[SERVER c] 2026/11/05 11:17:33 [TICK] Lamport merged and ticked to: 23
+[SERVER c] 2026/11/05 11:17:33 c is entering the critical section at time: 23
+[SERVER c] 2026/11/05 11:17:33 c is doing work in the critical section and is 'working' for 10 seconds
+[SERVER c] 2026/11/05 11:17:43 c is releasing the critical section at time: 23
+[SERVER c] 2026/11/05 11:18:02 [MERGE] Merging between local timestamp: 23 and message timestamp: 21, and ticking by one.
+[SERVER c] 2026/11/05 11:18:02 [TICK] Lamport merged and ticked to: 24
+[SERVER c] 2026/11/05 11:18:02 [TICK] Lamport ticked to: 25
+[SERVER c] 2026/11/05 11:18:03 [TICK] Lamport ticked to: 26
+[SERVER c] 2026/11/05 11:18:03 [MERGE] Merging between local timestamp: 26 and message timestamp: 28, and ticking by one.
+[SERVER c] 2026/11/05 11:18:03 [TICK] Lamport merged and ticked to: 29
+[SERVER c] 2026/11/05 11:18:03 [MERGE] Merging between local timestamp: 29 and message timestamp: 28, and ticking by one.
+[SERVER c] 2026/11/05 11:18:03 [TICK] Lamport merged and ticked to: 30
+[SERVER c] 2026/11/05 11:18:12 [MERGE] Merging between local timestamp: 30 and message timestamp: 29, and ticking by one.
+[SERVER c] 2026/11/05 11:18:12 [TICK] Lamport merged and ticked to: 31
+[SERVER c] 2026/11/05 11:18:12 c is entering the critical section at time: 31
+[SERVER c] 2026/11/05 11:18:12 c is doing work in the critical section and is 'working' for 10 seconds
+[SERVER c] 2026/11/05 11:18:22 c is releasing the critical section at time: 31

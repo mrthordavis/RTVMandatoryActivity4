@@ -1,0 +1,29 @@
+[SERVER a] 2026/11/05 11:16:40 [STARTUP] Server has started at logical time: 0
+[SERVER a] 2026/11/05 11:16:53 [MERGE] Merging between local timestamp: 0 and message timestamp: 1, and ticking by one.
+[SERVER a] 2026/11/05 11:16:53 [TICK] Lamport merged and ticked to: 2
+[SERVER a] 2026/11/05 11:16:53 [TICK] Lamport ticked to: 3
+[SERVER a] 2026/11/05 11:16:56 [MERGE] Merging between local timestamp: 3 and message timestamp: 4, and ticking by one.
+[SERVER a] 2026/11/05 11:16:56 [TICK] Lamport merged and ticked to: 5
+[SERVER a] 2026/11/05 11:16:56 [TICK] Lamport ticked to: 6
+[SERVER a] 2026/11/05 11:17:01 [MERGE] Merging between local timestamp: 6 and message timestamp: 7, and ticking by one.
+[SERVER a] 2026/11/05 11:17:01 [TICK] Lamport merged and ticked to: 8
+[SERVER a] 2026/11/05 11:17:01 [TICK] Lamport ticked to: 9
+[SERVER a] 2026/11/05 11:17:03 [TICK] Lamport ticked to: 10
+[SERVER a] 2026/11/05 11:17:03 [MERGE] Merging between local timestamp: 10 and message timestamp: 13, and ticking by one.
+[SERVER a] 2026/11/05 11:17:03 [TICK] Lamport merged and ticked to: 14
+[SERVER a] 2026/11/05 11:17:09 [MERGE] Merging between local timestamp: 14 and message timestamp: 15, and ticking by one.
+[SERVER a] 2026/11/05 11:17:09 [TICK] Lamport merged and ticked to: 16
+[SERVER a] 2026/11/05 11:17:13 [MERGE] Merging between local timestamp: 16 and message timestamp: 19, and ticking by one.
+[SERVER a] 2026/11/05 11:17:13 [TICK] Lamport merged and ticked to: 20
+[SERVER a] 2026/11/05 11:17:23 [MERGE] Merging between local timestamp: 20 and message timestamp: 19, and ticking by one.
+[SERVER a] 2026/11/05 11:17:23 [TICK] Lamport merged and ticked to: 21
+[SERVER a] 2026/11/05 11:17:23 a is entering the critical section at time: 21
+[SERVER a] 2026/11/05 11:17:23 a is doing work in the critical section and is 'working' for 10 seconds
+[SERVER a] 2026/11/05 11:17:33 a is releasing the critical section at time: 21
+[SERVER a] 2026/11/05 11:17:33 [TICK] Lamport ticked to: 22
+[SERVER a] 2026/11/05 11:18:02 [MERGE] Merging between local timestamp: 22 and message timestamp: 21, and ticking by one.
+[SERVER a] 2026/11/05 11:18:02 [TICK] Lamport merged and ticked to: 23
+[SERVER a] 2026/11/05 11:18:02 [TICK] Lamport ticked to: 24
+[SERVER a] 2026/11/05 11:18:03 [MERGE] Merging between local timestamp: 24 and message timestamp: 26, and ticking by one.
+[SERVER a] 2026/11/05 11:18:03 [TICK] Lamport merged and ticked to: 27
+[SERVER a] 2026/11/05 11:18:03 [TICK] Lamport ticked to: 28
