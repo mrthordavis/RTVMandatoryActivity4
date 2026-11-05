@@ -39,6 +39,13 @@ func (s *Server) sendTick() int32 {
 	return returnValue
 }
 
+func (s *Server) sendTickLocked() int32 {
+	s.lamport++
+	returnValue := s.lamport
+	log.Println("[TICK] Lamport ticked to: " + strconv.Itoa(int(s.lamport)))
+	return returnValue
+}
+
 func (s *Server) mergeAndTick(externalTime int32) int32 {
 	s.mu.Lock()
 	log.Println("[MERGE] Merging between local timestamp: " + strconv.Itoa(int(s.lamport)) + " and message timestamp: " + strconv.Itoa(int(externalTime)) + ", and ticking by one.")
@@ -65,7 +72,7 @@ func main() {
 
 	writer := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(writer)
-	log.SetPrefix("[SERVER] ")
+	log.SetPrefix("[SERVER " + myID + "] ")
 
 	defer logFile.Close()
 
@@ -94,7 +101,7 @@ func main() {
 		if parts[0] == myID {
 			myPort = parts[1]
 		} else {
-			server.knownNodesMap[parts[0]] = parts[1]
+			server.knownNodesMap[parts[0]] = "localhost:" + parts[1]
 		}
 	}
 
@@ -140,7 +147,7 @@ func (s *Server) requestAccessToCS() {
 	if s.state == 0 {
 		s.state = 1
 
-		s.requestTimestamp = s.lamport
+		s.requestTimestamp = s.sendTickLocked()
 		localTimeStamp := s.requestTimestamp
 		s.mu.Unlock()
 
@@ -154,18 +161,22 @@ func (s *Server) requestAccessToCS() {
 
 		s.mu.Lock()
 		s.state = 2
-		s.criticalSection()
-		s.state = 0
-		close(s.release)
+		lamportForCS := s.lamport
+		s.mu.Unlock()
+		s.criticalSection(int(lamportForCS))
+		s.releaseCriticalSection()
+	} else {
+		// Ignore and unlock if already requesting or holding
+		s.mu.Unlock()
 	}
-
-	s.mu.Unlock()
 }
 
 func (s *Server) releaseCriticalSection() {
 	s.mu.Lock()
 	if s.state == 2 {
 		s.state = 0
+		close(s.release)
+		s.release = make(chan struct{})
 	}
 	s.mu.Unlock()
 }
@@ -185,26 +196,28 @@ func (s *Server) singleRequest(wg *sync.WaitGroup, peerID string, client pb.Rica
 
 // Request handler for handling other nodes' requests
 func (s *Server) Request(ctx context.Context, req *pb.RequestMsg) (*pb.ReplyMsg, error) {
+	s.mergeAndTick(req.Lamport)
 	s.mu.Lock()
-	if s.state == 0 {
-		msg := &pb.ReplyMsg{Id: s.id, Lamport: s.lamport}
-		return msg, nil
-	} else if s.state == 1 && (s.requestTimestamp < req.Lamport || (s.requestTimestamp == req.Lamport && s.id < req.Id)) {
+	var mustDefer bool = s.state == 2 || (s.state == 1 && (s.requestTimestamp < req.Lamport || (s.requestTimestamp == req.Lamport && s.id < req.Id)))
+	release := s.release
+	s.mu.Unlock()
+
+	if mustDefer {
 		//Defer request, we have priority
-	} else if s.state == 2 {
-		//Defer request
+		<-release
 	}
+
+	msg := &pb.ReplyMsg{Id: s.id, Lamport: s.sendTick()}
+	return msg, nil
 }
 
 // Critical section go routine w. print statement and sleep
-func (s *Server) criticalSection() {
-	log.Println(s.id + " is entering the critical section at time: " + strconv.Itoa(int(s.lamport)))
+func (s *Server) criticalSection(lamport int) {
+	log.Println(s.id + " is entering the critical section at time: " + strconv.Itoa(lamport))
 
 	log.Println(s.id + " is doing work in the critical section and is 'working' for 10 seconds")
 
 	time.Sleep(10 * time.Second)
 
-	log.Println(s.id + " is releasing the critical section at time: " + strconv.Itoa(int(s.lamport)))
+	log.Println(s.id + " is releasing the critical section at time: " + strconv.Itoa(lamport))
 }
-
-// Reply to all requests
