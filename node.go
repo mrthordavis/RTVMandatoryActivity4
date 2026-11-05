@@ -128,6 +128,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
+	// Manually make this node request by writing "request" in the terminal window
 	for scanner.Scan() {
 		if strings.ToLower(scanner.Text()) == "request" {
 			go server.requestAccessToCS()
@@ -141,24 +142,28 @@ func main() {
 	server.mu.Unlock()
 }
 
-// Method for requesting all other nodes
+// Method for requesting all other nodes, and then entering the critcal section when all replies have arrived.
 func (s *Server) requestAccessToCS() {
 	s.mu.Lock()
 	if s.state == 0 {
+		// Set state to wanted
 		s.state = 1
 
+		// Set the timestamp for this node's latest request.
 		s.requestTimestamp = s.sendTickLocked()
 		localTimeStamp := s.requestTimestamp
 		s.mu.Unlock()
 
 		var wg sync.WaitGroup
 
+		// Send out requests to all other nodes, and wait for their replies with a waitgroup.
 		for id, rac := range s.clients {
 			wg.Add(1)
 			go s.singleRequest(&wg, id, rac, localTimeStamp)
 		}
 		wg.Wait()
 
+		// Set state to held, do work in the critical section, and release it when done.
 		s.mu.Lock()
 		s.state = 2
 		lamportForCS := s.lamport
@@ -166,11 +171,12 @@ func (s *Server) requestAccessToCS() {
 		s.criticalSection(int(lamportForCS))
 		s.releaseCriticalSection()
 	} else {
-		// Ignore and unlock if already requesting or holding
+		// Ignore and unlock if already requesting or holding. Should only happen if user manually writes "request" in the terminal while already requesting or holding.
 		s.mu.Unlock()
 	}
 }
 
+// Method for releasing the critical section, locks locally.
 func (s *Server) releaseCriticalSection() {
 	s.mu.Lock()
 	if s.state == 2 {
@@ -181,7 +187,7 @@ func (s *Server) releaseCriticalSection() {
 	s.mu.Unlock()
 }
 
-// Method for requesting a single node.
+// Method for sending a single request, and waiting for its reply
 func (s *Server) singleRequest(wg *sync.WaitGroup, peerID string, client pb.RicartAgrawalaClient, timestamp int32) {
 	defer wg.Done()
 
@@ -198,12 +204,14 @@ func (s *Server) singleRequest(wg *sync.WaitGroup, peerID string, client pb.Rica
 func (s *Server) Request(ctx context.Context, req *pb.RequestMsg) (*pb.ReplyMsg, error) {
 	s.mergeAndTick(req.Lamport)
 	s.mu.Lock()
+
+	// Check whether i have priority, or if i should reply immediately
 	var mustDefer bool = s.state == 2 || (s.state == 1 && (s.requestTimestamp < req.Lamport || (s.requestTimestamp == req.Lamport && s.id < req.Id)))
 	release := s.release
 	s.mu.Unlock()
 
 	if mustDefer {
-		//Defer request, we have priority
+		//Defer request, i have priority
 		<-release
 	}
 
